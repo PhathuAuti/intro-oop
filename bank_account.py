@@ -24,4 +24,3 @@ bank_acc.withdraw(300)
 print(bank_acc.finish_month())
 
 # print(bank_acc.balance)
-# print(bank_acc.bank_account_number)
