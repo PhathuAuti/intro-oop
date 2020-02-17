@@ -1,4 +1,6 @@
 from bank_account import BankAccount
+from customers import Customer
+
 class Bank(BankAccount):
 
     def __init__(self, bank_accounts=[] ):
@@ -8,15 +10,18 @@ class Bank(BankAccount):
         self.bank_accounts.append(account_object)
         print("Account with account number: " + account_object.bank_account_number + " created successfully!")
 
-    def withdraw(self, bank_account_number, amount):
+    def withdraw(self, bank_account_number, amount, password):
         if len(bank_account_number) == 10:
             for bank_acc in self.bank_accounts:
                 if bank_acc.bank_account_number == bank_account_number:
-                    bank_acc.withdraw(amount)
-                    return "Account Balance of " + bank_acc.bank_account_number + ": R" + str(bank_acc.balance)
+                    if bank_acc.customer.check_password(password) is True:
+                        bank_acc.withdraw(amount)
+                        return "Account Balance of " + bank_acc.bank_account_number + ": R" + str(bank_acc.balance)
+                    else:
+                        raise Exception("wrong password")
         raise Exception ('ERROR: Invalid Account Number ')        
 
-    def deposit(self, bank_account_number, amount):
+    def deposit(self, bank_account_number, amount, password):
         '''
         First check if the bank account number exists in the accounts list
         and deposit iff it exist.
@@ -24,8 +29,11 @@ class Bank(BankAccount):
         if len(bank_account_number) == 10:
             for bank_acc in self.bank_accounts:
                 if bank_acc.bank_account_number == bank_account_number:
-                    bank_acc.deposit(amount)
-                    return "Account Balance of " + bank_acc.bank_account_number + ": R" + str(bank_acc.balance)
+                    if bank_acc.customer.check_password(password) is True:
+                        bank_acc.withdraw(amount)
+                        return "Account Balance of " + bank_acc.bank_account_number + ": R" + str(bank_acc.balance)
+                    else:
+                        raise Exception("wrong password")
         raise Exception ('ERROR: Invalid Account Number ') 
             
 
@@ -55,15 +63,15 @@ class Bank(BankAccount):
             print( "Account Balance of " + to_account_object.bank_account_number + ": R" + str(to_account_object.balance))
 
 bank = Bank()
-bank_acc1 = BankAccount("1234567789",1000, 0.12, 50)
-print("Current bank accounts before registration")
-print(bank.bank_accounts)
-bank.register_account(bank_acc1)
-print("Current bank accounts after registration")
-print(bank.bank_accounts)
-print(type(bank_acc1))
+bank_acc1 = BankAccount("1234567789",1000, 0.12, 50, "jane")
+# print("Current bank accounts before registration")
+# print(bank.bank_accounts)
+# bank.register_account(bank_acc1)
+# print("Current bank accounts after registration")
+# print(bank.bank_accounts)
+# print(type(bank_acc1))
 
-# print(bank.withdraw("1234567789", 300))
+print(bank.withdraw("1234567789", 300, 1234))
 # print(bank.deposit("1234567789", 100))
 # print("After transfer")
 # print(bank.transfer(1234567769, 9877654321, 200))
